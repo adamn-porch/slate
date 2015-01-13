@@ -56,6 +56,7 @@
 <ol>
 <li><a href="#deep-link">Deep Link</a>: Uses the query string to pass data across to porch&rsquo;s home report. Limited amount of data on home report.</li>
 <li><a href="#api">API</a>: Uses a RESTful API to pass data to porch&rsquo;s home report. Robust amount of data on home report.</li>
+<li><a href="#widget">Widget</a>: Coming Soon&hellip;</li>
 </ol>
 
           <h1 id='deep-link'>Deep Link</h1>
@@ -65,11 +66,11 @@
 <p>Partner Integrates links into listing detail page next to contextually relevant home &amp; neighborhood information. Top performing links include &ldquo;See Improvement&rdquo;, &ldquo;View Permit History&rdquo; &amp; &ldquo;See Neighborhood Stats&rdquo;</p>
 
 <p><img src="images/deeplink/link.png"/></p>
-<h3 id='request'>Request</h3><h4 id='url-format'>Url Format</h4>
+<h4 id='url-format'>Url Format</h4>
 <p><code class="prettyprint">https://porch.com/homes/{dash-separated-address-slug}/?{query-params}</code></p>
 <h4 id='example'>Example</h4>
 <p><code class="prettyprint">https://porch.com/homes/3431-la-salle-dr-ann-arbor-mi-48108/?utm_source=partner_utm_source&amp;utm_medium=property-web&amp;utm_campaign=See%20Improvements&amp;tid=homereport</code></p>
-<h3 id='response'>Response</h3><h4 id='lead-capture'>Lead Capture</h4>
+<h4 id='lead-capture'>Lead Capture</h4>
 <p>Porch Lead Capture page with report blur. Requesting end user enters <code class="prettyprint">name</code>, <code class="prettyprint">email</code> and <code class="prettyprint">phone</code> to unlock the report. Prominent &ldquo;Return to Listing&rdquo; button links directly back to listing detail page.</p>
 
 <p><img src="images/deeplink/modal.png"/></p>
@@ -77,7 +78,11 @@
 <p>Once the user&rsquo;s information has been validated, we will hide the dialog to reveal the home report.</p>
 
 <p><img src="images/deeplink/home-report.png"/></p>
-<h4 id='agent-data'>Agent Data</h4>
+<h4 id='consumer-email'>Consumer Email</h4>
+<p>A consumer &ldquo;lead&rdquo; will receive an email from porch with a link back to the listing and to view the saved home report.  If an agent was provided in the referral, we will display that agent&rsquo;s information on the email as well.</p>
+
+<p><img src="images/deeplink/email-consumer.png"/></p>
+<h4 id='agent-email'>Agent Email</h4>
 <p>A partner will supply porch with agent data so that Porch can send the agent the relevant lead information and a link to the requested Porch Home Report. In addition, the agent data ensures the agent is featured on the Porch Home Report. </p>
 
 <p><img src="images/deeplink/email-agent.png"/></p>
@@ -324,7 +329,7 @@
 </tbody></table>
 
           <h1 id='api'>API</h1>
-<p>Welcome to the Porch API! The Porch API allows you to integrate into the Porch system and use the Porch Home Report to drive leads to your business.  The API uses the standard technology of REST calls over HTTP.</p>
+<p>The API uses the standard technology of REST calls over HTTP.</p>
 
 <p>Responses are returned in the JSON format.</p>
 <h2 id='changes'>Changes</h2>
@@ -1293,6 +1298,9 @@
 <td></td>
 </tr>
 </tbody></table>
+
+          <h1 id='widget'>Widget</h1>
+<p>Coming Soon&hellip;</p>
 
       </div>
       <div class="dark-box">
