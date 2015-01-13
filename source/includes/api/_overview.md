@@ -1,6 +1,6 @@
 # API
 
-Welcome to the Porch API! The Porch API allows you to integrate into the Porch system and use the Porch Home Report to drive leads to your business.  The API uses the standard technology of REST calls over HTTP.
+The API uses the standard technology of REST calls over HTTP.
   
 Responses are returned in the JSON format.
 

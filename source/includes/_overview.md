@@ -6,4 +6,6 @@ Integration methods:
 
 1. [Deep Link](#deep-link): Uses the query string to pass data across to porch's home report. Limited amount of data on home report.
 2. [API](#api): Uses a RESTful API to pass data to porch's home report. Robust amount of data on home report.
+2. [Widget](#widget): Coming Soon...
+
 

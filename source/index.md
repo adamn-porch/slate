@@ -13,12 +13,13 @@ toc_footers:
 
 includes:
   - overview  
-  - deeplinkoverview
-  - deeplinkintegration
-  - deeplinkparameters
-  - apioverview
-  - apimethods
-  - apientities
+  - deeplink/overview
+  - deeplink/integration
+  - deeplink/parameters
+  - api/overview
+  - api/methods
+  - api/entities
+  - widget/overview
   
 search: true
 ---
