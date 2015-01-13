@@ -391,27 +391,31 @@
 <p>All response bodies are JSON encoded.</p>
 
 <p>A single resource is represented as a JSON object</p>
-<pre><code class="highlight json"><span class="p">{</span><span class="w">
-  </span><span class="s2">"field1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"field2"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"field3"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
+
+<p><code class="prettyprint">
+{
+  &quot;field1&quot;: &quot;value&quot;,
+  &quot;field2&quot;: true,
+  &quot;field3&quot;: []
+}
+</code></p>
 
 <p>A collection of resources is represented as a JSON array of objects</p>
-<pre><code class="highlight json"><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"field1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"field2"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"field3"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"field1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"another value"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"field2"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"field3"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></code></pre>
+
+<p><code class="prettyprint">
+[
+  {
+    &quot;field1&quot;: &quot;value&quot;,
+    &quot;field2&quot;: true,
+    &quot;field3&quot;: []
+  },
+  {
+    &quot;field1&quot;: &quot;another value&quot;,
+    &quot;field2&quot;: false,
+    &quot;field3&quot;: []
+  }
+]
+</code></p>
 
 <p>Timestamps are formatted as Unix.</p>
 
@@ -616,7 +620,7 @@
 </code></pre>
 
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>Response:</p>
 </blockquote>
 <pre><code class="highlight json"><span class="p">{</span><span class="w">
    </span><span class="s2">"listingId"</span><span class="p">:</span><span class="s2">"5e26f3ba-6501-452f-86d0-a9c3abc5ed32"</span><span class="p">,</span><span class="w">
@@ -660,6 +664,10 @@
 </code></pre>
 
 <p>This endpoint creates a new listing then return resources associated with that listing.</p>
+
+<p><aside class="reminder">
+This endpoint <a href="#authentication">requires</a> an api key in the header of the request.
+</aside></p>
 <h4 id='http-request'>HTTP Request</h4>
 <p><code class="prettyprint">POST https://api.porch.com/v1/partners/{utmSource}/listings</code></p>
 <h4 id='url-parameters'>URL Parameters</h4>
@@ -687,7 +695,7 @@
 </code></pre>
 
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>Response:</p>
 </blockquote>
 <pre><code class="highlight json"><span class="p">{</span><span class="w">
    </span><span class="s2">"listingId"</span><span class="p">:</span><span class="s2">"5e26f3ba-6501-452f-86d0-a9c3abc5ed32"</span><span class="p">,</span><span class="w">
@@ -725,6 +733,12 @@
 </span></code></pre>
 <pre><code class="highlight java"></code></pre>
 <pre><code class="highlight csharp"></code></pre>
+
+<p>This endpoint gets a listing by listing id.</p>
+
+<p><aside class="reminder">
+This endpoint <a href="#authentication">requires</a> an api key in the header of the request.
+</aside></p>
 <h4 id='http-request'>HTTP Request</h4>
 <p><code class="prettyprint">GET https://api.porch.com/v1/partners/{utmSource}/listings/{listingId}</code></p>
 <h4 id='url-parameters'>URL Parameters</h4>
@@ -756,7 +770,7 @@
 </code></pre>
 
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>Response:</p>
 </blockquote>
 <pre><code class="highlight json"><span class="p">{</span><span class="w">
    </span><span class="s2">"listingId"</span><span class="p">:</span><span class="s2">"5e26f3ba-6501-452f-86d0-a9c3abc5ed32"</span><span class="p">,</span><span class="w">
@@ -794,6 +808,12 @@
 </span></code></pre>
 <pre><code class="highlight java"></code></pre>
 <pre><code class="highlight csharp"></code></pre>
+
+<p>This endpoint gets a listing&rsquo;s resources by listing id.</p>
+
+<p><aside class="reminder">
+This endpoint <a href="#authentication">requires</a> an api key in the header of the request.
+</aside></p>
 <h4 id='http-request'>HTTP Request</h4>
 <p><code class="prettyprint">GET https://api.porch.com/v1/partners/{utmSource}/listings/{listingId}/resources</code></p>
 <h4 id='url-parameters'>URL Parameters</h4>
@@ -825,7 +845,7 @@
 </code></pre>
 
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>Response:</p>
 </blockquote>
 <pre><code class="highlight json"><span class="p">{</span><span class="w">
    </span><span class="s2">"links"</span><span class="p">:[</span><span class="w">
@@ -859,6 +879,12 @@
 </span></code></pre>
 <pre><code class="highlight java"></code></pre>
 <pre><code class="highlight csharp"></code></pre>
+
+<p>This endpoint gets a listing&rsquo;s link resource by listing id.</p>
+
+<p><aside class="reminder">
+This endpoint <a href="#authentication">requires</a> an api key in the header of the request.
+</aside></p>
 <h4 id='http-request'>HTTP Request</h4>
 <p><code class="prettyprint">GET https://api.porch.com/v1/partners/{utmSource}/listings/{listingId}/resources/links</code></p>
 <h4 id='url-parameters'>URL Parameters</h4>
