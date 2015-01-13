@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>API Reference</title>
+    <title>Porch Partner Integration Documentation</title>
 
     <link href="stylesheets/screen.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="stylesheets/print.css" rel="stylesheet" type="text/css" media="print" />
@@ -13,7 +13,7 @@
 
       <script>
         $(function() {
-          setupLanguages(["shell","ruby","python"]);
+          setupLanguages(["json","java","csharp","php"]);
         });
       </script>
   </head>
@@ -28,9 +28,10 @@
     <div class="tocify-wrapper">
       <img src="images/logo.png" />
         <div class="lang-selector">
-              <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
+              <a href="#" data-language-name="json">json</a>
+              <a href="#" data-language-name="java">java</a>
+              <a href="#" data-language-name="csharp">c#</a>
+              <a href="#" data-language-name="php">php</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -39,158 +40,399 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
+            <li><a href='#'>Become a Porch Partner</a></li>
             <li><a href='http://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
+        
+          <h1 id='overview'>Overview</h1>
+<p>Welcome to the Porch&rsquo;s partner integration overview! The partner integration allows you to integrate into the Porch system and use the Porch Home Report to drive leads to your business.</p>
 
-<p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
+<p>Integration methods:</p>
 
-<p>This example API documentation page was created with <a href="http://github.com/tripit/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&rsquo;s documentation.</p>
-<h1 id='authentication'>Authentication</h1>
+<ol>
+<li><a href="#deep-link">Deep Link</a>: Uses the query string to pass data across to porch&rsquo;s home report. Limited amount of data on home report.</li>
+<li><a href="#api">API</a>: Uses a RESTful API to pass data to porch&rsquo;s home report. Robust amount of data on home report.</li>
+</ol>
+
+          <h1 id='deep-link'>Deep Link</h1>
+<p>The partner will create links to porch home reports from their property listing pages, and porch will collect leads (name, email and phone number) and submit the user information back to the partner.</p>
+
+          <h2 id='integration'>Integration</h2>
+<p>Partner Integrates links into listing detail page next to contextually relevant home &amp; neighborhood information. Top performing links include &ldquo;See Improvement&rdquo;, &ldquo;View Permit History&rdquo; &amp; &ldquo;See Neighborhood Stats&rdquo;</p>
+
+<p><img src="/images/deeplink/link.png"/></p>
+<h3 id='request'>Request</h3><h4 id='url-format'>Url Format</h4>
+<p><code class="prettyprint">https://porch.com/homes/{dash-separated-address-slug}/?{query-params}</code></p>
+<h4 id='example'>Example</h4>
+<p><code class="prettyprint">https://porch.com/homes/3431-la-salle-dr-ann-arbor-mi-48108/?utm_source=partner_utm_source&amp;utm_medium=property-web&amp;utm_campaign=See%20Improvements&amp;tid=homereport</code></p>
+<h3 id='response'>Response</h3><h4 id='lead-capture'>Lead Capture</h4>
+<p>Porch Lead Capture page with report blur. Requesting end user enters <code class="prettyprint">name</code>, <code class="prettyprint">email</code> and <code class="prettyprint">phone</code> to unlock the report. Prominent &ldquo;Return to Listing&rdquo; button links directly back to listing detail page.</p>
+
+<p><img src="/images/deeplink/modal.png"/></p>
+<h4 id='home-report'>Home Report</h4>
+<p>Once the user&rsquo;s information has been validated, we will hide the dialog to reveal the home report.</p>
+
+<p><img src="/images/deeplink/home-report.png"/></p>
+<h4 id='agent-data'>Agent Data</h4>
+<p>A partner will supply porch with agent data so that Porch can send the agent the relevant lead information and a link to the requested Porch Home Report. In addition, the agent data ensures the agent is featured on the Porch Home Report. </p>
+
+<p><img src="/images/deeplink/email-agent.png"/></p>
+
+          <h2 id='parameters'>Parameters</h2><h3 id='porch'>Porch</h3>
+<p>These are used for porch tracking and other optional data</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>utm_source</td>
+<td>partner_utm_source</td>
+<td>yes</td>
+<td>Value that defines the name of the partner that sent the user to porch.com.</td>
+</tr>
+<tr>
+<td>utm_medium</td>
+<td><code class="prettyprint">property-web</code> or <code class="prettyprint">property-mobile</code> or <code class="prettyprint">property-email</code></td>
+<td>yes</td>
+<td>Identifies what referring medium–normal web page links should be &ldquo;property-web&rdquo;</td>
+</tr>
+<tr>
+<td>utm_campaign</td>
+<td>link_anchor_text</td>
+<td>yes</td>
+<td>Used to identify the link text on a given page.  For example &ldquo;See Improvements&rdquo;.  This is used by porch to change our messaging to the user and improve conversion rates.</td>
+</tr>
+<tr>
+<td>tid</td>
+<td>homereport_partner_1_partner_2_website</td>
+<td>yes</td>
+<td>Porch specific identifier needed for internal tracking, provided by Porch.</td>
+</tr>
+<tr>
+<td>test_email</td>
+<td>string</td>
+<td>no</td>
+<td>if used, will send all outbound emails to specified account</td>
+</tr>
+<tr>
+<td>brand_name</td>
+<td>string</td>
+<td>no</td>
+<td>replaces the partner name with the brand_name</td>
+</tr>
+<tr>
+<td>brand_logo_url</td>
+<td>string</td>
+<td>no</td>
+<td>replaces the partner logo with the brand_logo_url</td>
+</tr>
+</tbody></table>
+<h3 id='property'>Property</h3>
+<p>These are for the property characteristics of the home listed and the listing information.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>property_url</td>
+<td>string</td>
+<td>no</td>
+<td>url for the user to return to the listing after visiting porch.com</td>
+</tr>
+<tr>
+<td>property_price</td>
+<td>integer</td>
+<td>no</td>
+<td>current listing price of the property</td>
+</tr>
+<tr>
+<td>property_beds</td>
+<td>integer</td>
+<td>no</td>
+<td>number of bedrooms</td>
+</tr>
+<tr>
+<td>property_baths</td>
+<td>decimal</td>
+<td>no</td>
+<td>number of bathrooms</td>
+</tr>
+<tr>
+<td>property_year_built</td>
+<td>string</td>
+<td>no</td>
+<td>year property was built</td>
+</tr>
+<tr>
+<td>property_type</td>
+<td>string</td>
+<td>no</td>
+<td>type of property</td>
+</tr>
+<tr>
+<td>property_sqft</td>
+<td>integer</td>
+<td>no</td>
+<td>square foot living area of home</td>
+</tr>
+<tr>
+<td>property_lot_sqft</td>
+<td>integer</td>
+<td>no</td>
+<td>square foot lot of property</td>
+</tr>
+<tr>
+<td>listing_date</td>
+<td>string</td>
+<td>no</td>
+<td>date listing came on market</td>
+</tr>
+</tbody></table>
+<h3 id='receiving-agent'>Receiving Agent</h3>
+<p>These are for the referral agent for a given listing.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>recv_agent_name</td>
+<td>string</td>
+<td>yes</td>
+<td>name of agent</td>
+</tr>
+<tr>
+<td>recv_agent_email</td>
+<td>string</td>
+<td>no</td>
+<td>email of agent</td>
+</tr>
+<tr>
+<td>recv_agent_website_url</td>
+<td>string</td>
+<td>no</td>
+<td>url of agent&rsquo;s website</td>
+</tr>
+<tr>
+<td>recv_agent_profile_url</td>
+<td>string</td>
+<td>no</td>
+<td>url of agent&rsquo;s profile</td>
+</tr>
+<tr>
+<td>recv_agent_office_nm</td>
+<td>string</td>
+<td>no</td>
+<td>agent&rsquo;s office name</td>
+</tr>
+<tr>
+<td>recv_agent_photo_url</td>
+<td>string</td>
+<td>no</td>
+<td>photo url for agent</td>
+</tr>
+<tr>
+<td>recv_agent_id</td>
+<td>string</td>
+<td>no</td>
+<td>internal agent identifier</td>
+</tr>
+<tr>
+<td>recv_agent_phone_number</td>
+<td>string</td>
+<td>no</td>
+<td>contact phone number for agent</td>
+</tr>
+</tbody></table>
+<h3 id='listing-agent'>Listing Agent</h3>
+<p>These are for the listing agent for a given listing.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>listing_agent_nm</td>
+<td>string</td>
+<td>yes</td>
+<td>name of agent</td>
+</tr>
+<tr>
+<td>listing_agent_email</td>
+<td>string</td>
+<td>no</td>
+<td>email of agent</td>
+</tr>
+<tr>
+<td>listing_agent_advertiser_id</td>
+<td>string</td>
+<td>no</td>
+<td>agent&rsquo;s advertiser identifier</td>
+</tr>
+<tr>
+<td>listing_agent_photo_url</td>
+<td>string</td>
+<td>no</td>
+<td>photo url for agent</td>
+</tr>
+<tr>
+<td>listing_agent_phone_number</td>
+<td>string</td>
+<td>no</td>
+<td>contact phone number for agent</td>
+</tr>
+<tr>
+<td>listing_broker_nm</td>
+<td>string</td>
+<td>no</td>
+<td>agent broker name</td>
+</tr>
+<tr>
+<td>listing_broker_logo_url</td>
+<td>string</td>
+<td>no</td>
+<td>agent broker logo url</td>
+</tr>
+<tr>
+<td>listing_broker_phone_number</td>
+<td>string</td>
+<td>no</td>
+<td>agent broker phone number</td>
+</tr>
+</tbody></table>
+
+          <h1 id='api'>API</h1>
+<p>Welcome to the Porch API! The Porch API allows you to integrate into the Porch system and use the Porch Home Report to drive leads to your business.  The API uses the standard technology of REST calls over HTTP.</p>
+
+<p>Responses are returned in the JSON format.</p>
+<h2 id='changes'>Changes</h2>
+<p>Our API is versioned off by version number in the URL (i.e. https://api.porch.com/v1, https://api.porch.com/v2). Advanced notification of breaking changes will be sent by email to our API users.</p>
+<h2 id='authentication'>Authentication</h2>
 <blockquote>
 <p>To authorize, use this code:</p>
 </blockquote>
-<pre><code class="highlight ruby"><span class="nb">require</span> <span class="s1">'kittn'</span>
+<pre><code class="highlight json"></code></pre>
+<pre><code class="highlight java"></code></pre>
+<pre><code class="highlight csharp"><span class="k">using</span> <span class="nn">System.Net.Http</span><span class="p">;</span>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
+<span class="k">using</span> <span class="p">(</span><span class="n">var</span> <span class="n">client</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">HttpClient</span><span class="p">())</span>
+<span class="p">{</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">DefaultRequestHeaders</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"api-key"</span><span class="p">,</span> <span class="s">"partnerApiKey"</span><span class="p">);</span>
+    <span class="p">...</span>
+<span class="p">}</span>
 </code></pre>
-<pre><code class="highlight python"><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre><code class="highlight shell"><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
+<pre><code class="highlight php"></code></pre>
 
 <blockquote>
-<p>Make sure to replace <code class="prettyprint">meowmeowmeow</code> with your API key.</p>
+<p>Make sure to replace <code class="prettyprint">partnerApiKey</code> with your API key.</p>
 </blockquote>
 
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
+<p>This API is authenticated using an authorized API key in the headers of each request.</p>
 
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
+<p>All requests are associated with a specific company’s API key and permissions are limited to that company’s capabilities.</p>
 
-<p><code class="prettyprint">Authorization: meowmeowmeow</code></p>
+<p>Porch expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
 
-<p><aside class="notice">
-You must replace <code class="prettyprint">meowmeowmeow</code> with your personal API key.
-</aside></p>
-<h1 id='kittens'>Kittens</h1><h2 id='get-all-kittens'>Get All Kittens</h2><pre><code class="highlight ruby"><span class="nb">require</span> <span class="s1">'kittn'</span>
+<p><code class="prettyprint">api-key: partnerApiKey</code></p>
+<h2 id='requests'>Requests</h2>
+<p>The base URL of the API is https://api.porch.com/version where version should be replaced with the current version number (i.e. v1, v2).</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre>
-<pre><code class="highlight python"><span class="kn">import</span> <span class="nn">kittn</span>
+<p>JSON Bodies</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre>
-<pre><code class="highlight shell">curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
+<p>All POST requests are JSON encoded and must have content type of application/json, or the API will return a 415 Unsupported Media Type status code.</p>
 
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
+<p>HTTP Verbs</p>
+
+<p>We use standard HTTP verbs to indicate intent of a request:</p>
+
+<table><thead>
+<tr>
+<th>Method</th>
+<th>Definition</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>GET</td>
+<td>To retrieve a resource or a collection of resources</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>To create a resource</td>
+</tr>
+</tbody></table>
+<h2 id='responses'>Responses</h2>
+<p>All response bodies are JSON encoded.</p>
+
+<p>A single resource is represented as a JSON object</p>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"field1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"field2"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"field3"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>A collection of resources is represented as a JSON array of objects</p>
 <pre><code class="highlight json"><span class="p">[</span><span class="w">
   </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
+    </span><span class="s2">"field1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"field2"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"field3"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Isis"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+    </span><span class="s2">"field1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"another value"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"field2"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"field3"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint retrieves all kittens.</p>
-<h3 id='http-request'>HTTP Request</h3>
-<p><code class="prettyprint">GET http://example.com/kittens</code></p>
-<h3 id='query-parameters'>Query Parameters</h3>
+<p>Timestamps are formatted as Unix.</p>
+
+<p>Unset fields will be represented as a null instead of not being present. If the field is an array, it will be represented as an empty array (i.e. []).</p>
+<h3 id='http-status-codes'>HTTP Status Codes</h3>
+<p>We use HTTP status codes to indicate success or failure of a request.</p>
+
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
+<th>Success Code</th>
+<th>Meaning</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td>200</td>
+<td>OK &ndash; Request succeeded. Response included</td>
 </tr>
 <tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td>201</td>
+<td>Created &ndash; Resource created. URL to new resource in Location header</td>
+</tr>
+<tr>
+<td>204</td>
+<td>No Content &ndash; Request succeeded, but no response body</td>
 </tr>
 </tbody></table>
-
-<p><aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside></p>
-<h2 id='get-a-specific-kitten'>Get a Specific Kitten</h2><pre><code class="highlight ruby"><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre><code class="highlight python"><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre><code class="highlight shell">curl <span class="s2">"http://example.com/api/kittens/3"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
-
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre><code class="highlight json"><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Isis"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-
-<p>This endpoint retrieves a specific kitten.</p>
-
-<p><aside class="warning">If you&rsquo;re not using an administrator API key, note that some kittens will return 403 Forbidden if they are hidden for admins only.</aside></p>
-<h3 id='http-request'>HTTP Request</h3>
-<p><code class="prettyprint">GET http://example.com/kittens/&lt;ID&gt;</code></p>
-<h3 id='url-parameters'>URL Parameters</h3>
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>ID</td>
-<td>The ID of the cat to retrieve</td>
-</tr>
-</tbody></table>
-
-          <h1 id='errors'>Errors</h1>
-<p><aside class="notice">This error section is stored in a separate file in <code class="prettyprint">includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files&hellip;just save them to the <code class="prettyprint">includes</code> folder and add them to the top of your <code class="prettyprint">index.md</code>&rsquo;s frontmatter. Files are included in the order listed.</aside></p>
-
-<p>The Kittn API uses the following error codes:</p>
 
 <table><thead>
 <tr>
@@ -200,56 +442,865 @@ Remember — a happy kitten is an authenticated kitten!
 </thead><tbody>
 <tr>
 <td>400</td>
-<td>Bad Request &ndash; Your request sucks</td>
+<td>Bad Request &ndash; Could not parse request</td>
 </tr>
 <tr>
 <td>401</td>
-<td>Unauthorized &ndash; Your API key is wrong</td>
+<td>Unauthorized &ndash; No authentication credentials provided or authentication failed</td>
 </tr>
 <tr>
 <td>403</td>
-<td>Forbidden &ndash; The kitten requested is hidden for administrators only</td>
+<td>Forbidden &ndash; Authenticated user does not have access</td>
 </tr>
 <tr>
 <td>404</td>
-<td>Not Found &ndash; The specified kitten could not be found</td>
+<td>Not Found &ndash; Resource not found</td>
 </tr>
 <tr>
-<td>405</td>
-<td>Method Not Allowed &ndash; You tried to access a kitten with an invalid method</td>
+<td>415</td>
+<td>Unsupported Media Type &ndash; POST request occurred without an application/json content type</td>
 </tr>
 <tr>
-<td>406</td>
-<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
-</tr>
-<tr>
-<td>410</td>
-<td>Gone &ndash; The kitten requested has been removed from our servers</td>
-</tr>
-<tr>
-<td>418</td>
-<td>I&rsquo;m a teapot</td>
-</tr>
-<tr>
-<td>429</td>
-<td>Too Many Requests &ndash; You&rsquo;re requesting too many kittens! Slown down!</td>
+<td>422</td>
+<td>Unprocessable Entry &ndash; A request to modify or create a resource failed due to a validation error</td>
 </tr>
 <tr>
 <td>500</td>
-<td>Internal Server Error &ndash; We had a problem with our server. Try again later.</td>
+<td>Not Found &ndash; An internal server error occurred</td>
+</tr>
+<tr>
+<td>501</td>
+<td>Not Found &ndash; An internal server error occurred</td>
+</tr>
+<tr>
+<td>502</td>
+<td>Not Found &ndash; An internal server error occurred</td>
 </tr>
 <tr>
 <td>503</td>
-<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintanance. Please try again later.</td>
+<td>Not Found &ndash; An internal server error occurred</td>
+</tr>
+</tbody></table>
+<h3 id='client-errors'>Client Errors</h3>
+<p>Some of the response errors will contain a message with the response code.</p>
+
+<table><thead>
+<tr>
+<th>Response Code</th>
+<th>Meaning</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized &ndash; API Key required in headers</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden &ndash; Invalid API Key</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Bad Request &ndash; Listing property address required; Problem parsing listing property</td>
+</tr>
+</tbody></table>
+
+          <h2 id='methods'>Methods</h2><h3 id='create-listing'>Create Listing</h3><pre><code class="highlight json"><span class="p">{</span><span class="w">
+   </span><span class="s2">"testEmail"</span><span class="p">:</span><span class="s2">"test.porch@brokerage.com"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"listingId"</span><span class="p">:</span><span class="s2">"31040547"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"listingStatus"</span><span class="p">:</span><span class="s2">"Active"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"listingPrice"</span><span class="p">:</span><span class="mi">548000</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"listingPriceCurrencyCode"</span><span class="p">:</span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"listingUrl"</span><span class="p">:</span><span class="s2">"http://www.brokerage.com/listing/WA/Shoreline/2301-NW-204th-St-98177/31040547"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"listingDescription"</span><span class="p">:</span><span class="s2">"This immaculate home is ready for your holiday…"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"property"</span><span class="p">:{</span><span class="w">
+      </span><span class="s2">"address"</span><span class="p">:{</span><span class="w">
+         </span><span class="s2">"line1"</span><span class="p">:</span><span class="s2">"2301 NW 204th St"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"line2"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"city"</span><span class="p">:</span><span class="s2">"Shoreline"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"state"</span><span class="p">:</span><span class="s2">"WA"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"postalCode"</span><span class="p">:</span><span class="s2">"98177"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"county"</span><span class="p">:</span><span class="s2">"King"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"latitude"</span><span class="p">:</span><span class="mf">47.777204</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"longitude"</span><span class="p">:</span><span class="mf">-122.387488</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"neighborhood"</span><span class="p">:</span><span class="s2">"Richmond Beach"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"bedrooms"</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"bathrooms"</span><span class="p">:</span><span class="mf">2.5</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"propertyType"</span><span class="p">:</span><span class="s2">"Single Family Home"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"sqftLiving"</span><span class="p">:</span><span class="mi">2650</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"sqftLot"</span><span class="p">:</span><span class="mi">9140</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"yearBuilt"</span><span class="p">:</span><span class="s2">"1965"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"units"</span><span class="p">:</span><span class="mi">1</span><span class="w">
+   </span><span class="p">},</span><span class="w">
+   </span><span class="s2">"provider"</span><span class="p">:{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"MLS Broker"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"websiteUrl"</span><span class="p">:</span><span class="s2">"http://www.brokerage.com"</span><span class="w">
+   </span><span class="p">},</span><span class="w">
+   </span><span class="s2">"mls"</span><span class="p">:{</span><span class="w">
+      </span><span class="s2">"number"</span><span class="p">:</span><span class="mi">555555555</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"MLS Name"</span><span class="w">
+   </span><span class="p">},</span><span class="w">
+   </span><span class="s2">"brokerage"</span><span class="p">:{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"Broker Name"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"phoneNumber"</span><span class="p">:</span><span class="s2">"5555555555"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"email"</span><span class="p">:</span><span class="s2">"info@ brokerage.com"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"websiteUrl"</span><span class="p">:</span><span class="s2">"http://www.brokerage.com"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"logoUrl"</span><span class="p">:</span><span class="s2">"http://www. brokerage.com/assets/logo.png"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"addressLine1"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"addressLine2"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"addressCity"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"addressState"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"addressPostalCode"</span><span class="p">:</span><span class="s2">""</span><span class="w">
+   </span><span class="p">},</span><span class="w">
+   </span><span class="s2">"agents"</span><span class="p">:[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"Agent Name"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"title"</span><span class="p">:</span><span class="s2">"Best Broker"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"email"</span><span class="p">:</span><span class="s2">"agent.name@brokerage.com"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"websiteUrl"</span><span class="p">:</span><span class="s2">"http://www.agentnamewebsite.com"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"profileUrl"</span><span class="p">:</span><span class="s2">"http://www.brokerage.com/agents/agent.name"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"officeName"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"officePhoneNumber"</span><span class="p">:</span><span class="s2">"5555555555"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"photoUrl"</span><span class="p">:</span><span class="s2">"http://brokerage.com/img/agent.name.png"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"agentId"</span><span class="p">:</span><span class="s2">"agent.name.id"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"agentType"</span><span class="p">:</span><span class="s2">"listing"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"receivePorchEmail"</span><span class="p">:</span><span class="kc">true</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+   </span><span class="p">],</span><span class="w">
+   </span><span class="s2">"photos"</span><span class="p">:[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">"http://brokerage.com/listing-img/31040547?num=1"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"caption"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"description"</span><span class="p">:</span><span class="s2">""</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" http://brokerage.com/listing-img/31040547?num=2"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"caption"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"description"</span><span class="p">:</span><span class="s2">""</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" http://brokerage.com/listing-img/31040547?num=3"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"caption"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"description"</span><span class="p">:</span><span class="s2">""</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" http://brokerage.com/listing-img/31040547?num=4"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"caption"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"description"</span><span class="p">:</span><span class="s2">""</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+   </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<pre><code class="highlight java"></code></pre>
+<pre><code class="highlight csharp"><span class="k">using</span> <span class="nn">System.Net.Http</span><span class="p">;</span>
+
+<span class="k">using</span> <span class="p">(</span><span class="n">var</span> <span class="n">client</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">HttpClient</span><span class="p">())</span>
+<span class="p">{</span>
+    <span class="n">var</span> <span class="n">listing</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Listing</span><span class="p">();</span>    
+    <span class="n">client</span><span class="p">.</span><span class="n">DefaultRequestHeaders</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"api-key"</span><span class="p">,</span> <span class="s">"partnerApiKey"</span><span class="p">);</span>
+    <span class="n">var</span> <span class="n">response</span> <span class="p">=</span> <span class="n">await</span> <span class="n">client</span><span class="p">.</span><span class="nf">PostAsync</span><span class="p">(</span><span class="s">"https://api.porch.com/v1/partner/utmSource/listings"</span><span class="p">,</span> <span class="n">listing</span><span class="p">);</span>
+    <span class="n">var</span> <span class="n">responseString</span> <span class="p">=</span> <span class="n">await</span> <span class="n">response</span><span class="p">.</span><span class="n">Content</span><span class="p">.</span><span class="nf">ReadAsStringAsync</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre>
+<pre><code class="highlight php"><span class="cp">&lt;?php</span>
+
+<span class="nv">$Listing</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Listing</span><span class="p">();</span>
+<span class="nv">$Listing</span><span class="o">-&gt;</span><span class="na">testEmail</span><span class="o">-&gt;</span> <span class="o">=</span> <span class="s1">'email@email.com'</span><span class="p">;</span>
+
+<span class="cp">?&gt;</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+   </span><span class="s2">"listingId"</span><span class="p">:</span><span class="s2">"5e26f3ba-6501-452f-86d0-a9c3abc5ed32"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"linkResource"</span><span class="p">:{</span><span class="w">
+      </span><span class="s2">"apiUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.porch.com/v1/partners/utmsource/listings/5e26f3ba-6501-452f-86d0-a9c3abc5ed32/resources/links"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"links"</span><span class="p">:[</span><span class="w">
+         </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"See Improvements"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">"https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=See Improvements"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"improvement"</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"See Renovations"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=See Renovations"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"renovation"</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"Get Renovation Report"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=Get Renovation Report"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"renovation-report"</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"See Permit History"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=See Permit History"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"permit"</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"Get Neighborhood Trends"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=Get Neighborhood Trends"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"neighborhood"</span><span class="w">
+         </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<pre><code class="highlight java"></code></pre>
+<pre><code class="highlight csharp"></code></pre>
+<pre><code class="highlight php">array (
+  'ListingId' =&gt; '5e26f3ba-6501-452f-86d0-a9c3abc5ed32'
+)
+</code></pre>
+
+<p>This endpoint creates a new listing then return resources associated with that listing.</p>
+<h4 id='http-request'>HTTP Request</h4>
+<p><code class="prettyprint">POST https://api.porch.com/v1/partners/{utmSource}/listings</code></p>
+<h4 id='url-parameters'>URL Parameters</h4>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>utmSource</td>
+<td>The utm source created by Porch</td>
+</tr>
+</tbody></table>
+<h3 id='get-listing'>Get Listing</h3><pre><code class="highlight json"></code></pre>
+<pre><code class="highlight java"></code></pre>
+<pre><code class="highlight csharp"><span class="k">using</span> <span class="nn">System.Net.Http</span><span class="p">;</span>
+
+<span class="k">using</span> <span class="p">(</span><span class="n">var</span> <span class="n">client</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">HttpClient</span><span class="p">()){</span>
+    <span class="n">var</span> <span class="n">listing</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Listing</span><span class="p">();</span>    
+    <span class="n">client</span><span class="p">.</span><span class="n">DefaultRequestHeaders</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"api-key"</span><span class="p">,</span> <span class="s">"partnerApiKey"</span><span class="p">);</span>
+    <span class="n">var</span> <span class="n">response</span> <span class="p">=</span> <span class="n">await</span> <span class="n">client</span><span class="p">.</span><span class="nf">GetAsync</span><span class="p">(</span><span class="s">"https://api.porch.com/v1/partner/utmSource/listings/listingId"</span><span class="p">);</span>
+    <span class="n">var</span> <span class="n">responseString</span> <span class="p">=</span> <span class="n">await</span> <span class="n">response</span><span class="p">.</span><span class="n">Content</span><span class="p">.</span><span class="nf">ReadAsStringAsync</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+   </span><span class="s2">"listingId"</span><span class="p">:</span><span class="s2">"5e26f3ba-6501-452f-86d0-a9c3abc5ed32"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"linkResource"</span><span class="p">:{</span><span class="w">
+      </span><span class="s2">"apiUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.porch.com/v1/partners/utmsource/listings/5e26f3ba-6501-452f-86d0-a9c3abc5ed32/resources/links"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"links"</span><span class="p">:[</span><span class="w">
+         </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"See Improvements"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">"https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=See Improvements"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"improvement"</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"See Renovations"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=See Renovations"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"renovation"</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"Get Renovation Report"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=Get Renovation Report"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"renovation-report"</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"See Permit History"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=See Permit History"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"permit"</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"Get Neighborhood Trends"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=Get Neighborhood Trends"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"neighborhood"</span><span class="w">
+         </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<pre><code class="highlight java"></code></pre>
+<pre><code class="highlight csharp"></code></pre>
+<h4 id='http-request'>HTTP Request</h4>
+<p><code class="prettyprint">GET https://api.porch.com/v1/partners/{utmSource}/listings/{listingId}</code></p>
+<h4 id='url-parameters'>URL Parameters</h4>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>utmSource</td>
+<td>The utm source created by Porch</td>
+</tr>
+<tr>
+<td>listingId</td>
+<td>The listing id of the listing to retrieve</td>
+</tr>
+</tbody></table>
+<h3 id='get-listing-resources'>Get Listing Resources</h3><pre><code class="highlight json"></code></pre>
+<pre><code class="highlight java"></code></pre>
+<pre><code class="highlight csharp"><span class="k">using</span> <span class="nn">System.Net.Http</span><span class="p">;</span>
+
+<span class="k">using</span> <span class="p">(</span><span class="n">var</span> <span class="n">client</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">HttpClient</span><span class="p">()){</span>
+    <span class="n">var</span> <span class="n">listing</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Listing</span><span class="p">();</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">DefaultRequestHeaders</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"api-key"</span><span class="p">,</span> <span class="s">"partnerApiKey"</span><span class="p">);</span>
+    <span class="n">var</span> <span class="n">response</span> <span class="p">=</span> <span class="n">await</span> <span class="n">client</span><span class="p">.</span><span class="nf">GetAsync</span><span class="p">(</span><span class="s">"https://api.porch.com/v1/partner/utmSource/listings/listingId/resources"</span><span class="p">);</span>
+    <span class="n">var</span> <span class="n">responseString</span> <span class="p">=</span> <span class="n">await</span> <span class="n">response</span><span class="p">.</span><span class="n">Content</span><span class="p">.</span><span class="nf">ReadAsStringAsync</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+   </span><span class="s2">"listingId"</span><span class="p">:</span><span class="s2">"5e26f3ba-6501-452f-86d0-a9c3abc5ed32"</span><span class="p">,</span><span class="w">
+   </span><span class="s2">"linkResource"</span><span class="p">:{</span><span class="w">
+      </span><span class="s2">"apiUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.porch.com/v1/partners/utmsource/listings/5e26f3ba-6501-452f-86d0-a9c3abc5ed32/resources/links"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"links"</span><span class="p">:[</span><span class="w">
+         </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"See Improvements"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">"https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=See Improvements"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"improvement"</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"See Renovations"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=See Renovations"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"renovation"</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"Get Renovation Report"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=Get Renovation Report"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"renovation-report"</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"See Permit History"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=See Permit History"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"permit"</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"Get Neighborhood Trends"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=Get Neighborhood Trends"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"neighborhood"</span><span class="w">
+         </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<pre><code class="highlight java"></code></pre>
+<pre><code class="highlight csharp"></code></pre>
+<h4 id='http-request'>HTTP Request</h4>
+<p><code class="prettyprint">GET https://api.porch.com/v1/partners/{utmSource}/listings/{listingId}/resources</code></p>
+<h4 id='url-parameters'>URL Parameters</h4>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>utmSource</td>
+<td>The utm source created by Porch</td>
+</tr>
+<tr>
+<td>listingId</td>
+<td>The listing id of the listing to retrieve</td>
+</tr>
+</tbody></table>
+<h3 id='get-listing-resource-links'>Get Listing Resource Links</h3><pre><code class="highlight json"></code></pre>
+<pre><code class="highlight java"></code></pre>
+<pre><code class="highlight csharp"><span class="k">using</span> <span class="nn">System.Net.Http</span><span class="p">;</span>
+
+<span class="k">using</span> <span class="p">(</span><span class="n">var</span> <span class="n">client</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">HttpClient</span><span class="p">()){</span>
+    <span class="n">var</span> <span class="n">listing</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Listing</span><span class="p">();</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">DefaultRequestHeaders</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"api-key"</span><span class="p">,</span> <span class="s">"partnerApiKey"</span><span class="p">);</span>
+    <span class="n">var</span> <span class="n">response</span> <span class="p">=</span> <span class="n">await</span> <span class="n">client</span><span class="p">.</span><span class="nf">GetAsync</span><span class="p">(</span><span class="s">"https://api.porch.com/v1/partner/utmSource/listings/listingId/resources/links"</span><span class="p">);</span>
+    <span class="n">var</span> <span class="n">responseString</span> <span class="p">=</span> <span class="n">await</span> <span class="n">response</span><span class="p">.</span><span class="n">Content</span><span class="p">.</span><span class="nf">ReadAsStringAsync</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre><code class="highlight json"><span class="p">{</span><span class="w">
+   </span><span class="s2">"links"</span><span class="p">:[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"See Improvements"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">"https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=See Improvements"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"improvement"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"See Renovations"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=See Renovations"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"renovation"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"Get Renovation Report"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=Get Renovation Report"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"renovation-report"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"See Permit History"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=See Permit History"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"permit"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"label"</span><span class="p">:</span><span class="s2">"Get Neighborhood Trends"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"url"</span><span class="p">:</span><span class="s2">" https://porch.com/shorline-wa/homes/2301-nw-204th-st-shorline-wa-98177/1566645?lid=5e26f3ba-6501-452f-86d0-a9c3abc5ed32&amp;utm_source=brokerage&amp;utm_campaign=Get Neighborhood Trends"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"linkType"</span><span class="p">:</span><span class="s2">"neighborhood"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+   </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<pre><code class="highlight java"></code></pre>
+<pre><code class="highlight csharp"></code></pre>
+<h4 id='http-request'>HTTP Request</h4>
+<p><code class="prettyprint">GET https://api.porch.com/v1/partners/{utmSource}/listings/{listingId}/resources/links</code></p>
+<h4 id='url-parameters'>URL Parameters</h4>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>utmSource</td>
+<td>The utm source created by Porch</td>
+</tr>
+<tr>
+<td>listingId</td>
+<td>The listing id of the listing to retrieve</td>
+</tr>
+</tbody></table>
+
+          <h2 id='entities'>Entities</h2><h3 id='listing'>Listing</h3>
+<p>The listing entity contains everything needed to fill out the property card on the Porch Home Report.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>testEmail</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>listingId</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>listingStatus</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>listingPrice</td>
+<td>integer</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>listingPriceCurrencyCode</td>
+<td>string</td>
+<td>no</td>
+<td><code class="prettyprint">USD</code></td>
+</tr>
+<tr>
+<td>listingUrl</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>listingDescription</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>property</td>
+<td>property entity</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>provider</td>
+<td>provider entity</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>mls</td>
+<td>mls entity</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>brokerage</td>
+<td>brokerage entity</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>agents</td>
+<td>agent entity</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>photos</td>
+<td>photo entity</td>
+<td>no</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id='property'>Property</h3>
+<p>The property entity is the property characteristics of the home listed and the address entity.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>address</td>
+<td>address entity</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>bedrooms</td>
+<td>integer</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>bathrooms</td>
+<td>decimal</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>propertyType</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>sqftLiving</td>
+<td>integer</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>sqftLot</td>
+<td>integer</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>yearBuilt</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>units</td>
+<td>integer</td>
+<td>no</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id='address'>Address</h3>
+<p>The address entity is the listings address information.  This is used for us to relate the listing with Porch’s Home Report data.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>line1</td>
+<td>string</td>
+<td>yes</td>
+<td></td>
+</tr>
+<tr>
+<td>line2</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>city</td>
+<td>string</td>
+<td>yes</td>
+<td></td>
+</tr>
+<tr>
+<td>state</td>
+<td>string</td>
+<td>yes</td>
+<td></td>
+</tr>
+<tr>
+<td>postalCode</td>
+<td>integer</td>
+<td>yes</td>
+<td></td>
+</tr>
+<tr>
+<td>county</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>latitude</td>
+<td>real</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>longitude</td>
+<td>real</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>neighborhood</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id='provider'>Provider</h3>
+<p>The provider entity is the provider of the current listing.  We will use the brokerage by default, but the provider can be something other than the current brokerage.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>yes</td>
+<td></td>
+</tr>
+<tr>
+<td>websiteUrl</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id='mls'>MLS</h3>
+<p>The MLS entity is the MLS for the listing.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>number</td>
+<td>integer</td>
+<td>yes</td>
+<td></td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id='brokerage'>Brokerage</h3>
+<p>The brokerage entity is the current brokerage for the current listing.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>required</td>
+<td></td>
+</tr>
+<tr>
+<td>phoneNumber</td>
+<td>string</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>email</td>
+<td>string</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>websiteUrl</td>
+<td>string</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>logoUrl</td>
+<td>string</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>address</td>
+<td>address entity</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id='agent'>Agent</h3>
+<p>The agent entity is the listing agent(s) or referral agent(s) for a given listing.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>yes</td>
+<td></td>
+</tr>
+<tr>
+<td>title</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>email</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>websiteUrl</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>profileUrl</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>officeName</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>officePhoneNumber</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>photoUrl</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>agentId</td>
+<td>string</td>
+<td>no</td>
+<td>internal agent identifier</td>
+</tr>
+<tr>
+<td>agentType</td>
+<td>string</td>
+<td>yes</td>
+<td><code class="prettyprint">listing</code> or <code class="prettyprint">referral</code></td>
+</tr>
+<tr>
+<td>receivePorchEmail</td>
+<td>boolean</td>
+<td>yes</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id='photo'>Photo</h3>
+<p>The photo entity is a photo(s) of the property.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>url</td>
+<td>string</td>
+<td>yes</td>
+<td></td>
+</tr>
+<tr>
+<td>caption</td>
+<td>string</td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td>description</td>
+<td>string</td>
+<td>no</td>
+<td></td>
 </tr>
 </tbody></table>
 
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
+                <a href="#" data-language-name="json">json</a>
+                <a href="#" data-language-name="java">java</a>
+                <a href="#" data-language-name="csharp">c#</a>
+                <a href="#" data-language-name="php">php</a>
           </div>
       </div>
     </div>
