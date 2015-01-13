@@ -63,17 +63,17 @@ All response bodies are JSON encoded.
 
 A single resource is represented as a JSON object
 
-```json
+`
 {
   "field1": "value",
   "field2": true,
   "field3": []
 }
-```
+`
 
 A collection of resources is represented as a JSON array of objects
 
-```json
+`
 [
   {
     "field1": "value",
@@ -86,7 +86,7 @@ A collection of resources is represented as a JSON array of objects
     "field3": []
   }
 ]
-```
+`
 
 Timestamps are formatted as Unix.
 

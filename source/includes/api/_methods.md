@@ -115,7 +115,7 @@ $Listing->testEmail-> = 'email@email.com';
 ?>
 ```
 
-> The above command returns JSON structured like this:
+> Response:
 
 ```json
 {
@@ -167,6 +167,10 @@ array (
 
 This endpoint creates a new listing then return resources associated with that listing.
 
+<aside class="reminder">
+This endpoint [requires](#authentication) an api key in the header of the request.
+</aside>
+
 #### HTTP Request
 
 `POST https://api.porch.com/v1/partners/{utmSource}/listings`
@@ -196,7 +200,7 @@ using (var client = new HttpClient()){
 }
 ```
 
-> The above command returns JSON structured like this:
+> Response:
 
 ```json
 {
@@ -239,6 +243,12 @@ using (var client = new HttpClient()){
 
 ```csharp
 ```
+
+This endpoint gets a listing by listing id.
+
+<aside class="reminder">
+This endpoint [requires](#authentication) an api key in the header of the request.
+</aside>
 
 #### HTTP Request
 
@@ -270,7 +280,7 @@ using (var client = new HttpClient()){
 }
 ```
 
-> The above command returns JSON structured like this:
+> Response:
 
 ```json
 {
@@ -313,6 +323,11 @@ using (var client = new HttpClient()){
 
 ```csharp
 ```
+This endpoint gets a listing's resources by listing id.
+
+<aside class="reminder">
+This endpoint [requires](#authentication) an api key in the header of the request.
+</aside>
 
 #### HTTP Request
 
@@ -344,7 +359,7 @@ using (var client = new HttpClient()){
 }
 ```
 
-> The above command returns JSON structured like this:
+> Response:
 
 ```json
 {
@@ -383,6 +398,12 @@ using (var client = new HttpClient()){
 
 ```csharp
 ```
+
+This endpoint gets a listing's link resource by listing id.
+
+<aside class="reminder">
+This endpoint [requires](#authentication) an api key in the header of the request.
+</aside>
 
 #### HTTP Request
 
